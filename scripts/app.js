@@ -113,8 +113,9 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    return robot.messageRoom(user.name, message)
-    // return res.send(message)
+    console.log(user)
+    robot.messageRoom(user.name, message)
+    return res.send('')
   })
 
   robot.router.post('/hubot/toilet/:id', function(req, res) {
