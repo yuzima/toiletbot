@@ -53,7 +53,6 @@ const formatter = (toilets) => {
 
 module.exports = (robot) => {
   robot.hear(/state-men/i, function(res) {
-    console.log(res)
     return res.send(formatter(getState('male')))
   })
 
