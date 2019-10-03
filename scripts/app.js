@@ -65,18 +65,17 @@ const joinWaiting = (actions, user) => {
     const { name, value } = action
     if (value === 'yes') {
       const toliets = getToilets()
+      let exist = false
       toliets.forEach(t => {
         if (name === `wait_${t.gender}`) {
-          const exist = t.waiting_list.find(u => u.id === user.id)
+          exist = t.waiting_list.find(u => u.id === user.id)
           if (!exist) {
             t.waiting_list.push(user)
-          } else {
-            return `<@${user.id}> You have already joined the waiting queue`
           }
         }
       })
       writeToilets(toliets)
-      return `Congratulations, <@${user.id}> You just joined the waiting queue`
+      return exist ? `<@${user.id}> You have already joined the waiting queue` : `Congratulations, <@${user.id}> You just joined the waiting queue`
     } else {
       return `It's OK <@${user.id}>, maybe you are not in hurry`
     }
