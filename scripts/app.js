@@ -118,8 +118,9 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    console.log(user)
-    robot.messageRoom(user.name, message)
+    const room = robot.adapter.client.rtm.dataStore.getDMByName(user.name)
+    console.log(room)
+    robot.messageRoom(room, message)
     // return res.send(message)
   })
 
