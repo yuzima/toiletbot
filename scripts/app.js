@@ -1,5 +1,7 @@
 const fs = require('fs')
 const path = require('path')
+// const { WebClient } = require('@slack/client') 
+// const SLACK_APP_TOKEN="xoxb-3630464077-783599359335-4Pz5lv8xmcWCnEn4LRbDqb0Q"
 
 const getToilets = () => {
   const { toilets } = JSON.parse(fs.readFileSync(`${path.resolve()}/toilet.json`))
@@ -51,11 +53,22 @@ const formatter = (toilets) => {
 
 module.exports = (robot) => {
   robot.hear(/state-men/i, function(res) {
-    console.log(formatter(getState('male')))
+    console.log(res)
     return res.send(formatter(getState('male')))
   })
 
   robot.hear(/state-women/i, function(res) {
-    return res.send(getState('female'))
+    return res.send(formatter(getState('female')))
+  })
+
+  robot.router.post('/hubot/actions/:room', function(req, res) {
+    console.log(req)
+    let data, room, secret
+    room = req.params.room
+    console.log(room)
+    data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
+    secret = data.secret
+    robot.messageRoom(room, "I have a secret: " + secret)
+    return res.send('OK')
   })
 }
