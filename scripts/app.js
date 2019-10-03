@@ -121,7 +121,7 @@ module.exports = (robot) => {
   robot.router.post('/hubot/toilet/:id', function(req, res) {
     const id = req.params.id
     const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
-    const { id, status, timeStamp } = data
+    const { status, timeStamp } = data
     console.log('toilet id: ' + id)
     console.log(data)
     if (status === false) {
