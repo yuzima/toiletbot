@@ -6,6 +6,10 @@ const getToilets = () => {
   return toilets
 }
 
+const getToiletById = (toiletId) => {
+  return getToilets().find(t =>  t.id === toiletId)
+}
+
 const writeToilets = (toilets) => {
   const data = { toilets }
   fs.writeFileSync(`${path.resolve()}/toilet.json`, JSON.stringify(data, null, 2))
@@ -66,21 +70,20 @@ const joinWaiting = (actions, user) => {
           if (!exist) {
             t.waiting_list.push(user)
           } else {
-            return `<@${user.id}> You have joined the queue`
+            return `<@${user.id}> You have already joined the waiting queue`
           }
         }
       })
       writeToilets(toliets)
-      return `<@${user.id}> You have successfully joined the queue`
+      return `Congratulations, <@${user.id}> You just joined the waiting queue`
     } else {
-      return `It's OK <@${user.id}>, maybe you are not in hurry `
+      return `It's OK <@${user.id}>, maybe you are not in hurry`
     }
   }
 }
 
 const getWaitingList = (toiletId) => {
-  const toilets = getToilets()
-  const toilet = toilets.find(t =>  t.id === toiletId)
+  const toilet = getToiletById(toiletId)
   if (toilet) {
     const { waiting_list } = toilet 
     return waiting_list
@@ -102,6 +105,17 @@ const updateToilet = (toiletId, status, timeStamp) => {
   writeToilets(toilets)
 }
 
+const removeFromOthers = (user) => {
+  let toilets = getToilets()
+  toilets = toilets.map(t => {
+    let { waiting_list } = t
+    waiting_list = waiting_list.filter(w => w.id !== user.id)
+    t.waiting_list = waiting_list
+  })
+  console.log(toilets)
+  writeToilets(toilets)
+}
+
 module.exports = (robot) => {
   robot.hear(/state-men/i, function(res) {
     return res.send(formatter(getState('male')))
@@ -118,9 +132,6 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    // const room = robot.adapter.client.rtm.dataStore.getDMByName(user.name)
-    // console.log(room)
-    // return robot.messageRoom(room.id, message)
     return res.send(message)
   })
 
@@ -128,12 +139,18 @@ module.exports = (robot) => {
     const id = req.params.id
     const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
     const { status, timeStamp } = data
-    // Set toilet
+
+    const toilet = getToiletById(id)
     const usersToNotify = getWaitingList(id)
+
+    // Set toilet
     updateToilet(id, status, timeStamp)
+
     if (status === false) {
       usersToNotify.forEach(usr => {
-        robot.messageRoom(usr.name, `Toilet ${id} is empty now, rush to it before some one occupy it`)
+        const room = robot.adapter.client.rtm.dataStore.getDMByName(usr.name)
+        robot.messageRoom(room.id, `${toilet.desc} is empty now, rush to it before some one occupy it`)
+        removeFromOthers(usr)
       })
     }
     return res.send({ result: 'success' })

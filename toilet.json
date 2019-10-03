@@ -3,7 +3,7 @@
     {
       "id": "1",
       "gender": "male",
-      "desc": "men's toilet",
+      "desc": "Men's toilet",
       "status": true,
       "last_modified": "1570053051555",
       "waiting_list": []
@@ -11,7 +11,7 @@
     {
       "id": "2",
       "gender": "female",
-      "desc": "women's toilet",
+      "desc": "Women's toilet",
       "status": false,
       "last_modified": "1570053051555",
       "waiting_list": []
