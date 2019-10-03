@@ -66,14 +66,14 @@ const joinWaiting = (actions, user) => {
           if (!exist) {
             t.waiting_list.push(user)
           } else {
-            return 'You have joined the queue'
+            return `@${user.name} You have joined the queue`
           }
         }
       })
       writeToilets(toliets)
-      return 'You have successfully joined the queue'
+      return `@${user.name} You have successfully joined the queue`
     } else {
-      return `It's OK, maybe you are not in hurry ` 
+      return `It's OK @${user.name}, maybe you are not in hurry `
     }
   }
 }
@@ -118,10 +118,10 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    const room = robot.adapter.client.rtm.dataStore.getDMByName(user.name)
-    console.log(room)
-    return robot.messageRoom(room.id, message)
-    // return res.send(message)
+    // const room = robot.adapter.client.rtm.dataStore.getDMByName(user.name)
+    // console.log(room)
+    // return robot.messageRoom(room.id, message)
+    return res.send(message)
   })
 
   robot.router.post('/hubot/toilet/:id', function(req, res) {
