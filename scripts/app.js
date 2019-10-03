@@ -113,7 +113,7 @@ module.exports = (robot) => {
   robot.router.post('/hubot/toilet/:id', function(req, res) {
     const id = req.params.id
     console.log(req.body)
-    const data = req.body.payload != null ? JSON.parse(req.body.payload) : JSON.parse(req.body)
+    const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
     const { status, timeStamp } = data
     if (status === false) {
       const usersToNotify = getWaitingList(id)
