@@ -8,6 +8,11 @@ const getToilets = () => {
   return toilets
 }
 
+const writeToilets = (toilets) => {
+  const data = { toilets }
+  fs.writeFileSync(`${path.resolve()}/toilet.json`, JSON.stringify(data, null, 2))
+}
+
 const getState = (gender) => {
   let toilets = getToilets()
   if (gender) {
@@ -33,13 +38,13 @@ const formatter = (toilets) => {
         color: "#3AA3E3",
         actions: [
           {
-            name: "wait",
+            name: `wait_${toilets[0].gender}`,
             text: "Join",
             type: "button",
             value: "yes"
           },
           {
-            name: "wait",
+            name: `wait_${toilets[0].gender}`,
             text: "Not join",
             type: "button",
             value: "no"
@@ -49,6 +54,31 @@ const formatter = (toilets) => {
     ]
   }
   return text
+}
+
+const joinWaiting = (actions, user) => {
+  if (Array.isArray(actions) && actions.length) {
+    const action = actions[0]
+    const { name, value } = action
+    if (value === 'yes') {
+      const toliets = getToilets()
+      toliets.forEach(t => {
+        if (name === `wait_${t.gender}`) {
+          const exist = t.waiting_list.find(u => u.id === user.id)
+          if (!exist) {
+            t.waiting_list.push(user)
+          } else {
+            return 'You have joined the queue'
+          }
+        }
+      })
+      console.log(toliets)
+      // writeToilets(toliets)
+      return 'You have successfully joined the queue'
+    } else {
+      return `It's OK, maybe you are not in hurry ` 
+    }
+  }
 }
 
 module.exports = (robot) => {
@@ -61,13 +91,16 @@ module.exports = (robot) => {
   })
 
   robot.router.post('/hubot/actions/:room', function(req, res) {
-    console.log(req)
-    let data, room, secret
-    room = req.params.room
-    console.log(room)
-    data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
-    secret = data.secret
-    robot.messageRoom(room, "I have a secret: " + secret)
-    return res.send('OK')
+    // let data, room, secret
+    // room = req.params.room
+    const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
+    // secret = data.secret
+    // robot.messageRoom(room, "I have a secret: " + secret)
+    const { callback_id, actions, user } = data
+    let message = 'OK'
+    if (callback_id === 'join_waiting') {
+      message = joinWaiting(actions, user)
+    }
+    return res.send(message)
   })
 }
