@@ -114,8 +114,7 @@ module.exports = (robot) => {
       message = joinWaiting(actions, user)
     }
     console.log(user)
-    robot.messageRoom(user.name, message)
-    return res.send('')
+    return res.send(message)
   })
 
   robot.router.post('/hubot/toilet/:id', function(req, res) {
