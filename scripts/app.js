@@ -86,12 +86,12 @@ const getWaitingList = (toiletId) => {
   return waiting_list
 }
 
-const notifyUser = (user) => {
-  return {
-    user: user.name,
-    msg: 
-  }
-}
+// const notifyUser = (user) => {
+//   return {
+//     user: user.name,
+//     msg: ``
+//   }
+// }
 
 module.exports = (robot) => {
   robot.hear(/state-men/i, function(res) {
@@ -113,8 +113,8 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    console.log(user)
-    return res.send(message)
+    robot.messageRoom(user.name, message)
+    // return res.send(message)
   })
 
   robot.router.post('/hubot/toilet/:id', function(req, res) {
