@@ -80,6 +80,19 @@ const joinWaiting = (actions, user) => {
   }
 }
 
+const getWaitingList = (toiletId) => {
+  const toilet = getToilets().find(t => t.id === toiletId)
+  const { waiting_list } = toilet 
+  return waiting_list
+}
+
+const notifyUser = (user) => {
+  return {
+    user: user.name,
+    msg: 
+  }
+}
+
 module.exports = (robot) => {
   robot.hear(/state-men/i, function(res) {
     return res.send(formatter(getState('male')))
@@ -100,7 +113,8 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    return res.send(message)
+    robot.messageRoom(user.name, message)
+    // return res.send(message)
   })
 
   robot.router.post('/hubot/toilet/:id', function(req, res) {
@@ -109,6 +123,12 @@ module.exports = (robot) => {
     // const { id, status, timeStamp } = data
     console.log('toilet id: ' + id)
     console.log(data)
+    if (status === false) {
+      const usersToNotify = getWaitingList(id)
+      usersToNotify.forEach(usr => {
+        robot.messageRoom(usr.name, `Toilet ${id} is empty now, rush to it before some one occupy it`)
+      })
+    }
     // const toliets = getToilets()
   })
 }
