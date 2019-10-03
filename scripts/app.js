@@ -66,14 +66,14 @@ const joinWaiting = (actions, user) => {
           if (!exist) {
             t.waiting_list.push(user)
           } else {
-            return `@${user.name} You have joined the queue`
+            return `#{${user.name}} You have joined the queue`
           }
         }
       })
       writeToilets(toliets)
-      return `@${user.name} You have successfully joined the queue`
+      return `#{${user.name}} You have successfully joined the queue`
     } else {
-      return `It's OK @${user.name}, maybe you are not in hurry `
+      return `It's OK #{${user.name}}, maybe you are not in hurry `
     }
   }
 }
