@@ -148,6 +148,7 @@ module.exports = (robot) => {
     updateToilet(id, status, timeStamp)
 
     if (status === false) {
+      console.log(usersToNotify)
       usersToNotify.forEach(usr => {
         const room = robot.adapter.client.rtm.dataStore.getDMByName(usr.name)
         robot.messageRoom(room.id, `<@${usr.id}> ${toilet.desc} is empty now, rush to it before some one occupy it`)
