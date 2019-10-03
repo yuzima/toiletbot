@@ -4,6 +4,7 @@
   "private": true,
   "author": "Yuzi Ma <mayuz.bubupu@gmail.com>",
   "description": "A toilet monitor",
+  "main": "./src/app.js",
   "dependencies": {
     "hubot": "^3.3.2",
     "hubot-diagnostics": "^1.0.0",
