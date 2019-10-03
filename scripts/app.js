@@ -81,17 +81,13 @@ const joinWaiting = (actions, user) => {
 }
 
 const getWaitingList = (toiletId) => {
-  const toilet = getToilets().find(t => t.id === toiletId)
+  const toilets = getToilets()
+  console.log(toilets)
+  const toilet = toilets.find(t => t.id === toiletId)
+  console.log(toilet)
   const { waiting_list } = toilet 
   return waiting_list
 }
-
-// const notifyUser = (user) => {
-//   return {
-//     user: user.name,
-//     msg: ``
-//   }
-// }
 
 module.exports = (robot) => {
   robot.hear(/state-men/i, function(res) {
@@ -103,11 +99,7 @@ module.exports = (robot) => {
   })
 
   robot.router.post('/hubot/actions/:room', function(req, res) {
-    // let data, room, secret
-    // room = req.params.room
     const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
-    // secret = data.secret
-    // robot.messageRoom(room, "I have a secret: " + secret)
     const { callback_id, actions, user } = data
     let message = 'OK'
     if (callback_id === 'join_waiting') {
@@ -121,7 +113,7 @@ module.exports = (robot) => {
   robot.router.post('/hubot/toilet/:id', function(req, res) {
     const id = req.params.id
     console.log(req.body)
-    const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
+    const data = req.body.payload != null ? JSON.parse(req.body.payload) : JSON.parse(req.body)
     const { status, timeStamp } = data
     if (status === false) {
       const usersToNotify = getWaitingList(id)
@@ -130,6 +122,5 @@ module.exports = (robot) => {
       })
     }
     return res.send({ result: 'success' })
-    // const toliets = getToilets()
   })
 }
