@@ -113,8 +113,8 @@ const removeFromOthers = (user) => {
     let { waiting_list } = t
     waiting_list = waiting_list.filter(w => w.id !== user.id)
     t.waiting_list = waiting_list
+    return t
   })
-  console.log(toilets)
   writeToilets(toilets)
 }
 
