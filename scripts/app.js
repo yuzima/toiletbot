@@ -101,8 +101,8 @@ const updateToilet = (toiletId, status, timeStamp) => {
       if (status === false) {
         t.waiting_list = []
       }
-      return t
     }
+    return t
   })
   writeToilets(toilets)
 }
