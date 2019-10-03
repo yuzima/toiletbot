@@ -151,6 +151,7 @@ module.exports = (robot) => {
       console.log(usersToNotify)
       usersToNotify.forEach(usr => {
         const room = robot.adapter.client.rtm.dataStore.getDMByName(usr.name)
+        console.log(room)
         robot.messageRoom(room.id, `<@${usr.id}> ${toilet.desc} is empty now, rush to it before some one occupy it`)
         removeFromOthers(usr)
       })
