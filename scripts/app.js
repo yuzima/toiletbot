@@ -113,6 +113,7 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
+    console.log(user)
     robot.messageRoom(user.name, message)
     // return res.send(message)
   })
@@ -120,7 +121,7 @@ module.exports = (robot) => {
   robot.router.post('/hubot/toilet/:id', function(req, res) {
     const id = req.params.id
     const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
-    // const { id, status, timeStamp } = data
+    const { id, status, timeStamp } = data
     console.log('toilet id: ' + id)
     console.log(data)
     if (status === false) {
@@ -129,6 +130,7 @@ module.exports = (robot) => {
         robot.messageRoom(usr.name, `Toilet ${id} is empty now, rush to it before some one occupy it`)
       })
     }
+    return res.send({ result: 'success' })
     // const toliets = getToilets()
   })
 }
