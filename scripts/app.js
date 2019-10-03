@@ -82,10 +82,8 @@ const joinWaiting = (actions, user) => {
 
 const getWaitingList = (toiletId) => {
   const toilets = getToilets()
-  console.log(toiletId)
   const toilet = toilets.find(t => {
-    console.log(t.id)
-    return t.id === toiletId
+    return t.id.toString() === toiletId.toString()
   })
   console.log(toilet)
   const { waiting_list } = toilet 
