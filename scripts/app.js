@@ -120,7 +120,7 @@ module.exports = (robot) => {
     }
     const room = robot.adapter.client.rtm.dataStore.getDMByName(user.name)
     console.log(room)
-    robot.messageRoom(room.id, 'hahaha')
+    return robot.messageRoom(room.id, message)
     // return res.send(message)
   })
 
