@@ -1,7 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-// const { WebClient } = require('@slack/client') 
-// const SLACK_APP_TOKEN="xoxb-3630464077-783599359335-4Pz5lv8xmcWCnEn4LRbDqb0Q"
 
 const getToilets = () => {
   const { toilets } = JSON.parse(fs.readFileSync(`${path.resolve()}/toilet.json`))
@@ -82,12 +80,26 @@ const joinWaiting = (actions, user) => {
 
 const getWaitingList = (toiletId) => {
   const toilets = getToilets()
-  const toilet = toilets.find(t => {
-    return t.id.toString() === toiletId.toString()
+  const toilet = toilets.find(t =>  t.id === toiletId)
+  if (toilet) {
+    const { waiting_list } = toilet 
+    return waiting_list
+  }
+  return []
+}
+
+const updateToilet = (toiletId, status, timeStamp) => {
+  let toilets = getToilets()
+  toilets = toilets.map(t => {
+    if (t.id === toiletId) {
+      t.status = status
+      t.last_modified = timeStamp
+      if (status === false) {
+        t.waiting_list = []
+      } 
+    }
   })
-  console.log(toilet)
-  const { waiting_list } = toilet 
-  return waiting_list
+  writeToilets(toilets)
 }
 
 module.exports = (robot) => {
@@ -113,11 +125,12 @@ module.exports = (robot) => {
 
   robot.router.post('/hubot/toilet/:id', function(req, res) {
     const id = req.params.id
-    console.log(req.body)
     const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
     const { status, timeStamp } = data
+    // Set toilet
+    const usersToNotify = getWaitingList(id)
+    updateToilet(id, status, timeStamp)
     if (status === false) {
-      const usersToNotify = getWaitingList(id)
       usersToNotify.forEach(usr => {
         robot.messageRoom(usr.name, `Toilet ${id} is empty now, rush to it before some one occupy it`)
       })

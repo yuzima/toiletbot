@@ -1,7 +1,7 @@
 {
   "toilets": [
     {
-      "id": 1,
+      "id": "1",
       "gender": "male",
       "desc": "men's toilet",
       "status": true,
@@ -9,7 +9,7 @@
       "waiting_list": []
     },
     {
-      "id": 2,
+      "id": "2",
       "gender": "female",
       "desc": "women's toilet",
       "status": false,
