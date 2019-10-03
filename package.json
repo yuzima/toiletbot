@@ -21,6 +21,6 @@
     "hubot-slack": "^4.7.1"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "12.6.0"
   }
 }
