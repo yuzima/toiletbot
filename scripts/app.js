@@ -113,7 +113,7 @@ module.exports = (robot) => {
     if (callback_id === 'join_waiting') {
       message = joinWaiting(actions, user)
     }
-    robot.messageRoom(user.name, message)
+    return robot.messageRoom(user.name, message)
     // return res.send(message)
   })
 
