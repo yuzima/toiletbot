@@ -7,7 +7,8 @@ const getToilets = () => {
 }
 
 const getToiletById = (toiletId) => {
-  return getToilets().find(t =>  t.id === toiletId)
+  const toilets = getToilets()
+  return toilets.find(t => { console.log(t); return t.id === toiletId })
 }
 
 const writeToilets = (toilets) => {
