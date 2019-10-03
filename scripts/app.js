@@ -72,8 +72,7 @@ const joinWaiting = (actions, user) => {
           }
         }
       })
-      console.log(toliets)
-      // writeToilets(toliets)
+      writeToilets(toliets)
       return 'You have successfully joined the queue'
     } else {
       return `It's OK, maybe you are not in hurry ` 
@@ -102,5 +101,14 @@ module.exports = (robot) => {
       message = joinWaiting(actions, user)
     }
     return res.send(message)
+  })
+
+  robot.router.post('/hubot/toilet/:id', function(req, res) {
+    const id = req.params.id
+    const data = req.body.payload != null ? JSON.parse(req.body.payload) : req.body
+    // const { id, status, timeStamp } = data
+    console.log('toilet id: ' + id)
+    console.log(data)
+    // const toliets = getToilets()
   })
 }
